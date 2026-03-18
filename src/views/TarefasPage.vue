@@ -1,55 +1,59 @@
 <template>
   <ion-page>
-    <ion-header :translucent="true">
+    <ion-header>
       <ion-toolbar>
+
+        <ion-buttons slot="start">
+          <ion-back-button default-href="/"></ion-back-button>
+        </ion-buttons>
+
         <ion-title>Tarefas</ion-title>
       </ion-toolbar>
     </ion-header>
 
-    <ion-content :fullscreen="true">
+    <ion-content class="ion-padding">
 
-      <div id="container">
-        <ion-text color="primary">
-          <h1>New Task</h1>
-        </ion-text>
-      </div>
-
-      <!-- Campo para digitar tarefa -->
-      <ion-input
-        v-model="novaTarefa"
-        placeholder="Enter task name">
-      </ion-input>
+      <!-- Input -->
+      <ion-item>
+        <ion-input
+          v-model="novaTarefa"
+          label="Nova tarefa"
+          label-placement="floating"
+          placeholder="Digite sua tarefa">
+        </ion-input>
+      </ion-item>
 
       <!-- Botão adicionar -->
       <ion-button expand="block" class="ion-margin-top" @click="adicionarTarefa">
-        Add Task
+        <ion-icon slot="start" :icon="addOutline"></ion-icon>
+        Adicionar
       </ion-button>
 
-      <!-- Mensagem se não houver tarefas -->
+      <!-- Mensagem vazio -->
       <p v-if="tarefas.length === 0" class="ion-text-center">
         Nenhuma tarefa cadastrada.
       </p>
 
-      <!-- Lista de tarefas -->
+      <!-- Lista -->
       <ion-list>
         <ion-item v-for="(tarefa, index) in tarefas" :key="index">
-          <ion-label>{{ tarefa }}</ion-label>
+
+          <ion-label>
+            {{ tarefa }}
+          </ion-label>
 
           <ion-button
+            slot="end"
+            fill="clear"
             color="danger"
-            size="small"
             @click="removerTarefa(index)">
-            Remover
+
+            <ion-icon :icon="trashOutline"></ion-icon>
+
           </ion-button>
 
         </ion-item>
       </ion-list>
-
-      <!-- Botão voltar -->
-      <ion-button expand="block" class="ion-margin-top" @click="$router.push('/')">
-        Go Back
-      </ion-button>
-      
 
     </ion-content>
   </ion-page>
@@ -59,30 +63,32 @@
 import { ref } from 'vue'
 
 import {
-  IonButton,
-  IonContent,
-  IonHeader,
-  IonInput,
   IonPage,
-  IonTitle,
+  IonHeader,
   IonToolbar,
+  IonTitle,
+  IonContent,
+  IonInput,
+  IonButton,
   IonList,
   IonItem,
   IonLabel,
-  IonText
+  IonIcon,
+  IonButtons,
+  IonBackButton
 } from '@ionic/vue'
 
+import { addOutline, trashOutline } from 'ionicons/icons'
+
+// estados
 const tarefas = ref<string[]>([])
 const novaTarefa = ref('')
 
+// funções
 function adicionarTarefa() {
-
-  if (novaTarefa.value.trim() === '') {
-    return
-  }
+  if (novaTarefa.value.trim() === '') return
 
   tarefas.value.push(novaTarefa.value)
-
   novaTarefa.value = ''
 }
 
@@ -90,10 +96,3 @@ function removerTarefa(index: number) {
   tarefas.value.splice(index, 1)
 }
 </script>
-
-<style scoped>
-#container {
-  text-align: center;
-  margin-top: 20px;
-}
-</style>
