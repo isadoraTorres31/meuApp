@@ -29,10 +29,19 @@
         Adicionar
       </ion-button>
 
+      <!-- Mensagem de erro quando input vazio -->
+      <ion-text v-if="erroTarefa" color="danger">
+        <p class="ion-text-center">
+          Não há nada escrito.
+        </p>
+      </ion-text>
+
       <!-- Mensagem vazio -->
-      <p v-if="tarefas.length === 0" class="ion-text-center">
-        Nenhuma tarefa cadastrada.
-      </p>
+      <ion-text v-if="tarefas.length === 0" color="medium">
+        <p class="ion-text-center">
+          Nenhuma tarefa cadastrada.
+        </p>
+      </ion-text>
 
       <!-- Lista -->
       <ion-list>
@@ -62,6 +71,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
+
 import {
   IonPage,
   IonHeader,
@@ -83,11 +93,16 @@ import { addOutline, trashOutline } from 'ionicons/icons'
 // estados
 const tarefas = ref<string[]>([])
 const novaTarefa = ref('')
+const erroTarefa = ref(false)
 
 // funções
 function adicionarTarefa() {
-  if (novaTarefa.value.trim() === '') return
+  if (novaTarefa.value.trim() === '') {
+    erroTarefa.value = true
+    return
+  }
 
+  erroTarefa.value = false
   tarefas.value.push(novaTarefa.value)
   novaTarefa.value = ''
 }
