@@ -49,6 +49,7 @@
       <ion-button expand="block" class="ion-margin-top" @click="$router.push('/')">
         Go Back
       </ion-button>
+      
 
     </ion-content>
   </ion-page>
