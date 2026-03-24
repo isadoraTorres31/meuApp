@@ -2,112 +2,66 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-
-        <ion-buttons slot="start">
-          <ion-back-button default-href="/"></ion-back-button>
-        </ion-buttons>
-
-        <ion-title>Tarefas</ion-title>
+        <ion-title>Lista de Tarefas</ion-title>
       </ion-toolbar>
     </ion-header>
 
     <ion-content class="ion-padding">
-
-      <!-- Input -->
       <ion-item>
         <ion-input
           v-model="novaTarefa"
-          label="Nova tarefa"
-          label-placement="floating"
-          placeholder="Digite sua tarefa">
-        </ion-input>
+          placeholder="Digite uma tarefa"
+        />
+        <ion-button @click="adicionarTarefa">Adicionar</ion-button>
       </ion-item>
 
-      <!-- Botão adicionar -->
-      <ion-button expand="block" class="ion-margin-top" @click="adicionarTarefa">
-        <ion-icon slot="start" :icon="addOutline"></ion-icon>
-        Adicionar
-      </ion-button>
+      <ion-item>
+        <ion-input
+          v-model="busca"
+          placeholder="Buscar tarefa"
+        />
+      </ion-item>
 
-      <!-- Mensagem de erro quando input vazio -->
-      <ion-text v-if="erroTarefa" color="danger">
-        <p class="ion-text-center">
-          Não há nada escrito.
-        </p>
-      </ion-text>
+      <ion-item>
+        <ion-select v-model="filtro" placeholder="Filtrar">
+          <ion-select-option value="todas">Todas</ion-select-option>
+          <ion-select-option value="pendentes">Pendentes</ion-select-option>
+          <ion-select-option value="concluidas">Concluídas</ion-select-option>
+        </ion-select>
+      </ion-item>
 
-      <!-- Mensagem vazio -->
-      <ion-text v-if="tarefas.length === 0" color="medium">
-        <p class="ion-text-center">
-          Nenhuma tarefa cadastrada.
-        </p>
-      </ion-text>
+      <p>Total de pendentes: {{ pendentes }}</p>
 
-      <!-- Lista -->
-      <ion-list>
-        <ion-item v-for="(tarefa, index) in tarefas" :key="index">
-
-          <ion-label>
-            {{ tarefa }}
-          </ion-label>
-
-          <ion-button
-            slot="end"
-            fill="clear"
-            color="danger"
-            @click="removerTarefa(index)">
-
-            <ion-icon :icon="trashOutline"></ion-icon>
-
-          </ion-button>
-
-        </ion-item>
-      </ion-list>
-
+      <CardTarefa
+        v-for="tarefa in filtradas"
+        :key="tarefa.id"
+        :tarefa="tarefa"
+        @remover="remover"
+        @concluir="concluir"
+      />
     </ion-content>
   </ion-page>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import CardTarefa from '../components/cardTarefa.vue'
+import { useTarefas } from '../composables/useTarefas'
 
-
-import {
-  IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonContent,
-  IonInput,
-  IonButton,
-  IonList,
-  IonItem,
-  IonLabel,
-  IonIcon,
-  IonButtons,
-  IonBackButton
-} from '@ionic/vue'
-
-import { addOutline, trashOutline } from 'ionicons/icons'
-
-// estados
-const tarefas = ref<string[]>([])
 const novaTarefa = ref('')
-const erroTarefa = ref(false)
 
-// funções
+const {
+  busca,
+  filtro,
+  pendentes,
+  filtradas,
+  adicionar,
+  remover,
+  concluir
+} = useTarefas()
+
 function adicionarTarefa() {
-  if (novaTarefa.value.trim() === '') {
-    erroTarefa.value = true
-    return
-  }
-
-  erroTarefa.value = false
-  tarefas.value.push(novaTarefa.value)
+  adicionar(novaTarefa.value)
   novaTarefa.value = ''
-}
-
-function removerTarefa(index: number) {
-  tarefas.value.splice(index, 1)
 }
 </script>
