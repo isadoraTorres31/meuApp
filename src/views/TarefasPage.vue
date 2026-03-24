@@ -1,3 +1,34 @@
+
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import CardTarefa from '../components/cardTarefa.vue'
+import { useTarefas } from '../composables/useTarefas'
+import { IonButton, IonContent, IonHeader, IonInput, IonItem, IonPage, IonSelect, IonSelectOption, IonTitle, IonToolbar } from '@ionic/vue'
+
+const inputTarefa = ref('')
+
+const {
+  busca,
+  filtro,
+  pendentes,
+  filtradas,
+  adicionar,
+  remover,
+  concluir
+} = useTarefas()
+
+
+
+
+const  adicionarTarefa = () => {
+  adicionar(inputTarefa.value)
+  inputTarefa.value = ''
+}
+</script>
+
+
+
 <template>
   <ion-page>
     <ion-header>
@@ -7,19 +38,21 @@
     </ion-header>
 
     <ion-content class="ion-padding">
-      <ion-item>
-        <ion-input
-          v-model="novaTarefa"
+       <ion-input
+          v-model="inputTarefa"
           placeholder="Digite uma tarefa"
-        />
+        ></ion-input>
         <ion-button @click="adicionarTarefa">Adicionar</ion-button>
+      <ion-item>
+       
       </ion-item>
 
       <ion-item>
         <ion-input
-          v-model="busca"
+          :value="busca"
+          @ionInput="busca = String($event.detail.value || '')"
           placeholder="Buscar tarefa"
-        />
+        ></ion-input>
       </ion-item>
 
       <ion-item>
@@ -42,26 +75,3 @@
     </ion-content>
   </ion-page>
 </template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import CardTarefa from '../components/cardTarefa.vue'
-import { useTarefas } from '../composables/useTarefas'
-
-const novaTarefa = ref('')
-
-const {
-  busca,
-  filtro,
-  pendentes,
-  filtradas,
-  adicionar,
-  remover,
-  concluir
-} = useTarefas()
-
-function adicionarTarefa() {
-  adicionar(novaTarefa.value)
-  novaTarefa.value = ''
-}
-</script>

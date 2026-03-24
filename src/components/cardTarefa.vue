@@ -43,4 +43,4 @@ function removerTarefa() {
 function toggleFeita() {
   emit('concluir', props.tarefa.id, !props.tarefa.feita)
 }
-</script>
+</script>   
