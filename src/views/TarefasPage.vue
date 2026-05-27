@@ -1,33 +1,51 @@
-
-
 <script setup lang="ts">
-import { ref } from 'vue'
-import CardTarefa from '../components/cardTarefa.vue'
-import { useTarefas } from '../composables/useTarefas'
-import { IonButton, IonContent, IonHeader, IonInput, IonItem, IonPage, IonSelect, IonSelectOption, IonTitle, IonToolbar } from '@ionic/vue'
+import { ref } from "vue";
+import CardTarefa from "../components/cardTarefa.vue";
+import { useTarefas } from "../composables/useTarefas";
 
-const inputTarefa = ref('')
+import {
+  IonButton,
+  IonContent,
+  IonHeader,
+  IonInput,
+  IonItem,
+  IonPage,
+  IonSelect,
+  IonSelectOption,
+  IonTitle,
+  IonToolbar,
+} from "@ionic/vue";
 
-const {
-  busca,
-  filtro,
-  pendentes,
-  filtradas,
-  adicionar,
-  remover,
-  concluir
-} = useTarefas()
-
-
-
-
-const  adicionarTarefa = () => {
-  adicionar(inputTarefa.value)
-  inputTarefa.value = ''
+import { alertController } from "@ionic/vue";
+async function confirmarExclusao(id: number) {
+  const alert = await alertController.create({
+    header: "Excluir tarefa?",
+    message: "Esta ação não pode ser desfeita.",
+    buttons: [
+      { text: "Cancelar", role: "cancel" },
+      {
+        text: "Excluir",
+        role: "destructive",
+        handler: () => {
+          store.remover(id);
+          ionRouter.back();
+        },
+      },
+    ],
+  });
+  await alert.present();
 }
+
+const inputTarefa = ref("");
+
+const { busca, filtro, pendentes, filtradas, adicionar, remover, concluir } =
+  useTarefas();
+
+const adicionarTarefa = () => {
+  adicionar(inputTarefa.value);
+  inputTarefa.value = "";
+};
 </script>
-
-
 
 <template>
   <ion-page>
@@ -38,14 +56,12 @@ const  adicionarTarefa = () => {
     </ion-header>
 
     <ion-content class="ion-padding">
-       <ion-input
-          v-model="inputTarefa"
-          placeholder="Digite uma tarefa"
-        ></ion-input>
-        <ion-button @click="adicionarTarefa">Adicionar</ion-button>
-      <ion-item>
-       
-      </ion-item>
+      <ion-input
+        v-model="inputTarefa"
+        placeholder="Digite uma tarefa"
+      ></ion-input>
+      <ion-button @click="adicionarTarefa">Adicionar</ion-button>
+      <ion-item> </ion-item>
 
       <ion-item>
         <ion-input
