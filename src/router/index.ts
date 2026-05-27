@@ -1,9 +1,6 @@
 import { createRouter, createWebHistory } from "@ionic/vue-router";
 import { RouteRecordRaw } from "vue-router";
-import HomePage from "../views/HomePage.vue";
-import TarefasPage from "../views/TarefasPage.vue";
-import LoginPage from "@/views/LoginPage.vue";
-import
+// imports de páginas são carregados dinamicamente nas rotas abaixo
 
 const routes: Array<RouteRecordRaw> = [
   { path: "/", redirect: "/tabs/tarefas" },
@@ -20,7 +17,6 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: "perfil",
         component: () => import("../views/PerfilPage.vue"),
-        meta: { requerNome: true },
       },
     ],
   },
@@ -31,14 +27,15 @@ const router = createRouter({
   routes,
 });
 
-// No final do router/index.ts, antes do export
+// Guarda global: verifica meta `requerNome` usando localStorage como fallback
 router.beforeEach((to, _, next) => {
- const usuStore = useUsuarioStore()
- if (to.meta.requerNome && !usuStore.nome) {
- next('/tabs/tarefas')
- } else {
- next()
- }
-})
+  const requerNome = (to.meta as any)?.requerNome;
+  const nome = localStorage.getItem("nome");
+  if (requerNome && !nome) {
+    next("/tabs/tarefas");
+  } else {
+    next();
+  }
+});
 
 export default router;

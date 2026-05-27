@@ -27,8 +27,7 @@ async function confirmarExclusao(id: number) {
         text: "Excluir",
         role: "destructive",
         handler: () => {
-          store.remover(id);
-          ionRouter.back();
+          remover(id);
         },
       },
     ],
@@ -85,7 +84,7 @@ const adicionarTarefa = () => {
         v-for="tarefa in filtradas"
         :key="tarefa.id"
         :tarefa="tarefa"
-        @remover="remover"
+        @remover="confirmarExclusao"
         @concluir="concluir"
       />
     </ion-content>
